@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 class AddStudent extends Component {
    state = {
       name: "",
@@ -7,7 +8,9 @@ class AddStudent extends Component {
    }
    handleSubmit = (event) => {
    event.preventDefault();  
+
    console.log("form submitted ", this.state);
+   this.props.addStudent(this.state);
    this.resetForm();
    
    }

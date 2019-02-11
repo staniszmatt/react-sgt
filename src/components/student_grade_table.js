@@ -3,7 +3,7 @@ import StudentRow from './student_row';
 
 const StudentGradeTable = (props) => {
 	const studentRows = props.studentList.map((student)=>{
-		return <StudentRow key={student.id} student={student}/>
+		return <StudentRow delete={props.deleteStudent} key={student.id} student={student}/>
 	});
 	return (
 		<table>
@@ -12,6 +12,7 @@ const StudentGradeTable = (props) => {
 					<th>Name</th>
 					<th>Course</th>
 					<th>Grade</th>
+					<th className="center">Actions</th>
 				</tr>
 			</thead>
 			<tbody>
