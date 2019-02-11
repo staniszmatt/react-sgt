@@ -8,8 +8,6 @@ class AddStudent extends Component {
    }
    handleSubmit = (event) => {
    event.preventDefault();  
-
-   console.log("form submitted ", this.state);
    this.props.addStudent(this.state);
    this.resetForm();
    

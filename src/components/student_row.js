@@ -17,5 +17,4 @@ const StudentRow = (props) => {
     </tr>  
     )
 }
-
 export default StudentRow;
