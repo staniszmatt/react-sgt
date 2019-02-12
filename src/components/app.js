@@ -1,6 +1,8 @@
-import React, {Component} from 'react';
+
 import 'materialize-css/dist/css/materialize.min.css';
 import 'materialize-css/dist/js/materialize.min' //This is needed for the full library to get all the functionality, only if needed!!
+import React, {Component} from 'react';
+import axios from 'axios';
 import '../assets/css/app.scss';
 import StudentGradeTable  from "./student_grade_table";
 import AddStudent from './add_students';
@@ -20,10 +22,12 @@ class App extends Component {
 	}
 	getStudentData() {
 		//Helper function
-		//TODO: Call server to get student data
-		this.setState({
-			students: studentData
-		});
+        axios.get("http://localhost/server/getstudentlist.php").then((response) => {
+            console.log("server response ",response.data.data);
+            this.setState({
+                students: response.data.data
+            });
+        })
     }
     /**
      * @param {Object} student - Pass in student object 
