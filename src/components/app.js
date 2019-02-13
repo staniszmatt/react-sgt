@@ -22,16 +22,11 @@ class App extends Component {
     
     async getStudentData() {
         //Helper function
-        const resp = await axios.get("http://localhost/server/getstudentlist.php");
+        const resp = await axios.get("server/getstudentlist.php");
         
-        if (resp.data.success) {
-            this.setState({
-                students: resp.data.data
-            })
-        } 
-        // else {
-        //     //TODO: Error message this! 
-        // }
+        this.setState({
+            students: resp.data.data || [] //If resp data is there store it, or set to empty array
+        })
 
         //The traditional way - moving away to .then away syntax of promises 
         // axios.get("http://localhost/server/getstudentlist.php").then((response) => {
@@ -46,13 +41,11 @@ class App extends Component {
      * @memberof App
      */
     addStudent = async (student) => {
-        console.log("Add student ", student);
-        const formattedStudent = formatPostData(student);
-        console.log("Formated student", formattedStudent)
-        const resp = await axios.post("http://localhost/server/createstudent.php", formattedStudent);
 
-        console.log("Add student ", resp);
-        
+        const formattedStudent = formatPostData(student);
+        //http://localhost is not normal!! Remove it if its on a real server!
+        await axios.post("server/createstudent.php", formattedStudent);
+        this.getStudentData();
         // student.id = randomString(); //Used for testing only 
         // this.setState({                                 //adding student at the end of the list, could place in front if wanted too. 
         //     students: [...this.state.students, student] //spread operator, takes all values in an array into this new array
@@ -62,19 +55,22 @@ class App extends Component {
      * @param {Number} id - Student id to delete
      * @memberof App
      */
-    deleteStudent = (id) => {
-        const indexToDelete = this.state.students.findIndex((student)=>{
-            return student.id === id;
-        })
-        if (indexToDelete >= 0){
-            const tempStudents = this.state.students.slice();
-            tempStudents.splice(indexToDelete, 1)
-            this.setState({
-                students: tempStudents
-            })
-        } else { 
-            return "Student Not Found!"
-        }
+    deleteStudent = async (id) => {
+        const formattedID = formatPostData({id: id});//id: id is the same name so just using id for ES6
+        await axios.post("server/deletestudent.php", formattedID);
+        this.getStudentData();
+        // const indexToDelete = this.state.students.findIndex((student)=>{ //Just JS no react, was used just for testing
+        //     return student.id === id;
+        // })
+        // if (indexToDelete >= 0){
+        //     const tempStudents = this.state.students.slice();
+        //     tempStudents.splice(indexToDelete, 1)
+        //     this.setState({
+        //         students: tempStudents
+        //     })
+        // } else { 
+        //     return "Student Not Found!"
+        // }
     }
     render(){
         return (
