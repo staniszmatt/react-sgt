@@ -20,14 +20,21 @@ class App extends Component {
 	componentDidMount() {
 		this.getStudentData();
 	}
-	getStudentData() {
-		//Helper function
-        axios.get("http://localhost/server/getstudentlist.php").then((response) => {
-            console.log("server response ",response.data.data);
-            this.setState({
-                students: response.data.data
-            });
+    
+    async getStudentData() {
+        //Helper function
+        const resp = await axios.get("http://localhost/server/getstudentlist.php");
+        
+        this.setState({
+            students: resp.data.data
         })
+        //The traditional way - moving away to .then away syntax of promises 
+        // axios.get("http://localhost/server/getstudentlist.php").then((response) => {
+        //     console.log("server response ",response.data.data);
+        //     this.setState({
+        //         students: response.data.data
+        //     });
+        // })
     }
     /**
      * @param {Object} student - Pass in student object 
