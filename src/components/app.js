@@ -1,11 +1,12 @@
-import React, {Component} from 'react';
+
 import 'materialize-css/dist/css/materialize.min.css';
 import 'materialize-css/dist/js/materialize.min' //This is needed for the full library to get all the functionality, only if needed!!
+import React, {Component} from 'react';
+import axios from 'axios';
 import '../assets/css/app.scss';
 import StudentGradeTable  from "./student_grade_table";
 import AddStudent from './add_students';
-import studentData from '../data/get_all_students';
-import {randomString} from '../helpers' //Don't need file, just the folder for helper files if its named index.js
+import {formatPostData} from '../helpers' //Don't need file, just the folder for helper files if its named index.js
 
 class App extends Component {
     state = {
@@ -18,40 +19,58 @@ class App extends Component {
 	componentDidMount() {
 		this.getStudentData();
 	}
-	getStudentData() {
-		//Helper function
-		//TODO: Call server to get student data
-		this.setState({
-			students: studentData
-		});
+    
+    async getStudentData() {
+        //Helper function
+        const resp = await axios.get("server/getstudentlist.php");
+        
+        this.setState({
+            students: resp.data.data || [] //If resp data is there store it, or set to empty array
+        })
+
+        //The traditional way - moving away to .then away syntax of promises 
+        // axios.get("http://localhost/server/getstudentlist.php").then((response) => {
+        //     console.log("server response ",response.data.data);
+        //     this.setState({
+        //         students: response.data.data
+        //     });
+        // })
     }
     /**
      * @param {Object} student - Pass in student object 
      * @memberof App
      */
-    addStudent = (student) => {
-        student.id = randomString();
-        this.setState({                                 //adding student at the end of the list, could place in front if wanted too. 
-            students: [...this.state.students, student] //spread operator, takes all values in an array into this new array
-        });
+    addStudent = async (student) => {
+
+        const formattedStudent = formatPostData(student);
+        //http://localhost is not normal!! Remove it if its on a real server!
+        await axios.post("server/createstudent.php", formattedStudent);
+        this.getStudentData();
+        // student.id = randomString(); //Used for testing only 
+        // this.setState({                                 //adding student at the end of the list, could place in front if wanted too. 
+        //     students: [...this.state.students, student] //spread operator, takes all values in an array into this new array
+        // });
     }
     /**
      * @param {Number} id - Student id to delete
      * @memberof App
      */
-    deleteStudent = (id) => {
-        const indexToDelete = this.state.students.findIndex((student)=>{
-            return student.id === id;
-        })
-        if (indexToDelete >= 0){
-            const tempStudents = this.state.students.slice();
-            tempStudents.splice(indexToDelete, 1)
-            this.setState({
-                students: tempStudents
-            })
-        } else { 
-            return "Student Not Found!"
-        }
+    deleteStudent = async (id) => {
+        const formattedID = formatPostData({id: id});//id: id is the same name so just using id for ES6
+        await axios.post("server/deletestudent.php", formattedID);
+        this.getStudentData();
+        // const indexToDelete = this.state.students.findIndex((student)=>{ //Just JS no react, was used just for testing
+        //     return student.id === id;
+        // })
+        // if (indexToDelete >= 0){
+        //     const tempStudents = this.state.students.slice();
+        //     tempStudents.splice(indexToDelete, 1)
+        //     this.setState({
+        //         students: tempStudents
+        //     })
+        // } else { 
+        //     return "Student Not Found!"
+        // }
     }
     render(){
         return (
