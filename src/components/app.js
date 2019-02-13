@@ -6,8 +6,7 @@ import axios from 'axios';
 import '../assets/css/app.scss';
 import StudentGradeTable  from "./student_grade_table";
 import AddStudent from './add_students';
-import studentData from '../data/get_all_students';
-import {randomString} from '../helpers' //Don't need file, just the folder for helper files if its named index.js
+import {formatPostData} from '../helpers' //Don't need file, just the folder for helper files if its named index.js
 
 class App extends Component {
     state = {
@@ -25,9 +24,15 @@ class App extends Component {
         //Helper function
         const resp = await axios.get("http://localhost/server/getstudentlist.php");
         
-        this.setState({
-            students: resp.data.data
-        })
+        if (resp.data.success) {
+            this.setState({
+                students: resp.data.data
+            })
+        } 
+        // else {
+        //     //TODO: Error message this! 
+        // }
+
         //The traditional way - moving away to .then away syntax of promises 
         // axios.get("http://localhost/server/getstudentlist.php").then((response) => {
         //     console.log("server response ",response.data.data);
@@ -40,11 +45,18 @@ class App extends Component {
      * @param {Object} student - Pass in student object 
      * @memberof App
      */
-    addStudent = (student) => {
-        student.id = randomString();
-        this.setState({                                 //adding student at the end of the list, could place in front if wanted too. 
-            students: [...this.state.students, student] //spread operator, takes all values in an array into this new array
-        });
+    addStudent = async (student) => {
+        console.log("Add student ", student);
+        const formattedStudent = formatPostData(student);
+        console.log("Formated student", formattedStudent)
+        const resp = await axios.post("http://localhost/server/createstudent.php", formattedStudent);
+
+        console.log("Add student ", resp);
+        
+        // student.id = randomString(); //Used for testing only 
+        // this.setState({                                 //adding student at the end of the list, could place in front if wanted too. 
+        //     students: [...this.state.students, student] //spread operator, takes all values in an array into this new array
+        // });
     }
     /**
      * @param {Number} id - Student id to delete
