@@ -4,8 +4,8 @@
   "description": "Student Grade Table - Built with ReactJS",
   "main": "index.js",
   "proxy": {
-    "/server/*" : {
-      "target": "http://localhost" 
+    "/server/*": {
+      "target": "http://localhost"
     }
   },
   "scripts": {
