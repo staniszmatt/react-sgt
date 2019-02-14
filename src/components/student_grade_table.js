@@ -6,7 +6,7 @@ import { formatPostData } from '../helpers';
 
 class StudentGradeTable extends Component {
 	state = {
-		students: []
+		students: null
 	}
 	componentDidMount(){
 		this.getStudentData();
@@ -29,7 +29,16 @@ class StudentGradeTable extends Component {
 				studentRows = students.map((student) => {
 					return <StudentRow delete={this.deleteStudent} key={student.id} student={student}/>
 				});
-		} else {
+		} else if (students === null){
+			studentRows.push(
+				<tr key="no-data">
+					<td colSpan="4">
+							<h4 className="center grey-text">Student Data Loading ... </h4>
+					</td>
+				</tr>
+			);
+		}
+		else {
 			studentRows.push(
 				<tr key="no-data">
 					<td colSpan="4">
