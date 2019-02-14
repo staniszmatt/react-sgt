@@ -4,26 +4,19 @@ class AddStudent extends Component {
    state = {
       name: "",
       course: "",
-      grade: "",
-      instructor: "",
-      notes: "",
+      grade: ""
    }
-   /**
-    * 
-    * @memberof AddStudent
-    */
    handleSubmit = (event) => {
    event.preventDefault();  //Stops the refresh and submitting the form when clicked because of the form element.
    this.props.addStudent(this.state);
    this.resetForm();
+   
    }
    resetForm = () => {
       this.setState({
          name: "",
          course: "",
-         grade: "",
-         instructor: "",
-         notes: ""
+         grade: ""
       });
    }
    handleKeyPress = (event) => {
@@ -34,7 +27,7 @@ class AddStudent extends Component {
    //need to add type button to keep clear from submitting the form by default
    //name needed for all inputs and id's
    render() { //input for materialize 
-      const {name, course, grade, instructor, notes} = this.state;
+      const {name, course, grade} = this.state;
 		return (
 			<form onSubmit={this.handleSubmit}>
 				<div className="row">
@@ -53,18 +46,6 @@ class AddStudent extends Component {
                <div className="col input-field s10 offset-s1" >
                   <input onChange={this.handleKeyPress} name="grade" type="number" id="grade" value={grade}/>
                   <label htmlFor="grade">Grade</label> {/* htmlfor attaches to the input elm */}
-               </div>
-            </div>
-            <div className="row">
-               <div className="col input-field s10 offset-s1" >
-                  <input onChange={this.handleKeyPress} name="instructor" type="text" id="instructor" value={instructor}/>
-                  <label htmlFor="instructor">Instructor</label> {/* htmlfor attaches to the input elm */}
-               </div>
-            </div>
-            <div className="row">
-               <div className="col input-field s10 offset-s1" >
-                  <input onChange={this.handleKeyPress} name="notes" type="text" id="notes" value={notes}/>
-                  <label htmlFor="notes">Notes</label> {/* htmlfor attaches to the input elm */}
                </div>
             </div>
             <div className="row">
