@@ -21,6 +21,7 @@ class ViewStudent extends Component {
   }
   
   render(){ //TODO: Can update to display everything and make it look pretty. 
+    //TODO: Fully display and error handle data 
     const {name, course} = this.state.student;
     return (
       <div>
